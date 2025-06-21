@@ -1,0 +1,44 @@
+# .gitignore for the .NET API project (backend/Torito.API/.gitignore)
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio / Rider temporary files
+.vs/
+.idea/
+*.sln.dotsettings
+
+# Secrets files that should not be committed
+# ローカル開発用のシークレット設定ファイルはコミットしないのが一般的
+appsettings.Development.json
+
+# Tooling
+# --------------
+# Roslyn analyzers
+.roslyn/
+
+# Other
+*.pfx
+*.key
+*.cer
+
+# Cache files
+*.nupkg

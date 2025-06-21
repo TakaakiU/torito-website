@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # --- PostgreSQLデータベースサービス ---
+  db:
+    image: postgres:16-alpine
+    container_name: torito-postgres-db
+    environment:
+      - POSTGRES_USER=torito_user
+      - POSTGRES_PASSWORD=Tu2450@T
+      - POSTGRES_DB=torito_local_db
+    ports:
+      - "5433:5432" # ホストPCの5433番をコンテナの5432番に接続
+    volumes:
+      - torito-db-data:/var/lib/postgresql/data
+    restart: always
+
+  # --- ASP.NET Core APIサービス ---
+  api:
+    container_name: torito-api
+    build:
+      context: ./backend/Torito.API  # Dockerfileがある場所を正しく指定
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8080" # ホストPCの8000番をコンテナの8080番に接続
+    environment:
+      # Swagger UI表示のために「開発モード」で起動させる
+      - ASPNETCORE_ENVIRONMENT=Development
+      # APIがDBコンテナに接続するための情報 (Host=db はサービス名を指す)
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=torito_local_db;Username=torito_user;Password=Tu2450@T
+      # コンテナ内でリッスンするURL
+      - ASPNETCORE_URLS=http://+:8080
+    depends_on:
+      - db # dbサービスが起動してからapiサービスを起動する
+    restart: on-failure
+
+# データを永続化するためのボリューム
+volumes:
+  torito-db-data:
