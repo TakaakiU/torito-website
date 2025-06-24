@@ -1,12 +1,28 @@
-// backend/Torito.API/Models/Inn.cs
+// Models/Inn.cs
 
-namespace Torito.API.Models;
+// ↓↓↓ この1行を追加する ↓↓↓
+using System.ComponentModel.DataAnnotations;
 
-public class Inn
+namespace Torito.API.Models
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Area { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public List<string> PhotoUrls { get; set; } = new();
+    public class Inn
+    {
+        public int Id { get; set; }
+    
+        [Required]
+        [MaxLength(100)]
+        public string Name { get; set; } = string.Empty;
+
+        [Required]
+        [MaxLength(50)]
+        public string Area { get; set; } = string.Empty;
+
+        public string Description { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public List<string> PhotoUrls { get; set; } = new List<string>();
+        
+        // この宿に紐づくクチコミ一覧 (リレーション)
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+    }
 }
