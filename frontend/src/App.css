@@ -45,3 +45,90 @@
   font-weight: 500;
   cursor: pointer;
 }
+
+/* --- 3. アプリケーション全体のレイアウト --- */
+.app-header {
+  background-color: var(--color-surface);
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header-logo {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.app-main {
+  padding: 2rem;
+}
+
+/* --- 4. ページ共通のスタイル --- */
+.page-container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.page-heading {
+  font-size: 2.2rem;
+  color: var(--color-text);
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 0.5rem;
+}
+
+/* --- 5. 宿一覧ページのスタイル --- */
+.inn-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.inn-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.inn-card {
+  background-color: var(--color-surface);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.inn-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.inn-card-name {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.inn-card-area {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* --- 6. 宿詳細ページのスタイル --- */
+.inn-detail-area {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.inn-detail-description {
+  line-height: 1.8;
+  white-space: pre-wrap; /* 改行を反映させる */
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 2rem;
+  color: var(--color-primary);
+  text-decoration: none;
+}
