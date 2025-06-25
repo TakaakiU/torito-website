@@ -7,4 +7,5 @@ public class InnDto
     public string Name { get; set; } = string.Empty;
     public string Area { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public List<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
 }

@@ -47,22 +47,33 @@ public class InnsController : ControllerBase
     {
         _logger.LogInformation($"宿ID: {id} の情報を取得リクエストを受け付けました。");
 
-        // データベースから指定されたIDの宿を探す
-        var inn = await _context.Inns.FindAsync(id);
+        // Includeを使い関連するReviewとその先のUserも一緒に読み込む
+        var inn = await _context.Inns
+            .Include(i => i.Reviews)
+                .ThenInclude(r => r.User)
+            .FirstOrDefaultAsync(i => i.Id == id);
 
         if (inn == null)
         {
-            _logger.LogWarning($"宿ID: {id} は見つかりませんでした。");
             return NotFound();
         }
 
-        // InnモデルをInnDtoに変換し返す
+        // InnモデルをInnDtoに変換する
         var innDto = new InnDto
         {
             Id = inn.Id,
             Name = inn.Name,
             Area = inn.Area,
-            Description = inn.Description
+            Description = inn.Description,
+            // クチコミ情報もマッピング
+            Reviews = inn.Reviews.Select(r => new ReviewDto
+            {
+                Id = r.Id,
+                UserName = r.User.Email, // ユーザーのEmailを投稿者名として使用
+                Rating = r.Rating,
+                Comment = r.Comment,
+                PostedAt = r.PostedAt
+            }).OrderByDescending(r => r.PostedAt).ToList()
         };
 
         return Ok(innDto);

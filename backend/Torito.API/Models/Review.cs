@@ -9,7 +9,7 @@ public class Review
 
     [Required]
     [MaxLength(100)]
-    public string UserName { get; set; } = string.Empty; // 本来はUserモデルと連携
+    public string UserName { get; set; } = string.Empty; // 削除予定
 
     [Range(1, 5)]
     public int Rating { get; set; }
@@ -18,9 +18,11 @@ public class Review
 
     public DateTime PostedAt { get; set; } = DateTime.UtcNow;
 
-    // 外部キー
+    // 外部キー 宿との紐づき
     public int InnId { get; set; }
-
-    // どの宿に紐づくか (ナビゲーションプロパティ)
     public Inn Inn { get; set; } = null!;
+
+    // 外部キー ユーザーとの紐づき
+    public int UserId { get; set; }
+    public User User { get; set; } = null!;
 }
