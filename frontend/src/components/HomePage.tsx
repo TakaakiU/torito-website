@@ -1,40 +1,68 @@
-// src/components/HomePage.tsx
+// src/components/HomePage.tsx (修正後)
 
 import { useEffect, useState } from 'react';
-import { fetchUserAttributes } from 'aws-amplify/auth';
-import type { FetchUserAttributesOutput } from 'aws-amplify/auth';
+import { fetchWithAuth } from '../utils/apiClient';
 
+// 親コンポーネント(App.tsx)から受け取るPropsの型定義
 interface HomePageProps {
   signOut: (() => void) | undefined;
 }
 
-export function HomePage({ signOut }: HomePageProps) {
-  const [userAttributes, setUserAttributes] = useState<FetchUserAttributesOutput | null>(null);
+// バックエンドのUserモデルに対応し、フロントエンド側の型を定義
+interface DbUser {
+  id: number;
+  cognitoSub: string;
+  email: string;
+  createdAt: string;
+}
 
+export function HomePage({ signOut }: HomePageProps) {
+  // stateで保持するデータの型を、事前に定義したDbUserへ変更
+  const [dbUser, setDbUser] = useState<DbUser | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // コンポーネントがマウントされた時に一度だけ実行
   useEffect(() => {
-    const handleFetchUserAttributes = async () => {
+    const getMyData = async () => {
       try {
-        const attributes = await fetchUserAttributes();
-        setUserAttributes(attributes);
+        // APIエンドポイントの呼び出し
+        const data: DbUser = await fetchWithAuth('/api/users/me');
+        setDbUser(data);
+        console.log('Successfully fetched DB user data:', data);
       } catch (e) {
-        console.error('Failed to fetch user attributes:', e);
+        // API呼び出しに失敗した場合の処理
+        if (e instanceof Error) {
+          setError(e.message);
+        }
+        console.error('Failed to fetch data from protected API:', e);
       }
     };
-    handleFetchUserAttributes();
-  }, []);
+
+    getMyData();
+  }, []); // 第2引数の配列が空のため、初回レンダリング時に1度だけ実行
 
   return (
     <div className="homepage-container">
-      <h1 className="homepage-heading">
-        Welcome Back
-      </h1>
+      <h1 className="homepage-heading">Welcome Back</h1>
       <p className="homepage-subheading">
-        {userAttributes?.email || '...'}
+        {dbUser?.email || 'Loading...'}
       </p>
       
       <button className="signout-button" onClick={signOut}>
         Sign Out
       </button>
+
+      {/* エラーまたはデバッグ情報の表示エリア */}
+      {error && (
+        <p style={{ color: '#ff6b6b', marginTop: '2rem' }}>
+          Error: {error}
+        </p>
+      )}
+      {dbUser && (
+        <p style={{ color: '#555', marginTop: '2rem', fontSize: '0.8rem' }}>
+          (DB User ID: {dbUser.id})
+        </p>
+      )}
     </div>
   );
 }

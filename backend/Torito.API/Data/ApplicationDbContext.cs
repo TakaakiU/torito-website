@@ -10,7 +10,8 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    // これらのプロパティがデータベースのテーブルになる
+    // データベースのテーブルになる
     public DbSet<Inn> Inns { get; set; }
     public DbSet<Review> Reviews { get; set; }
+    public DbSet<User> Users { get; set; }
 }

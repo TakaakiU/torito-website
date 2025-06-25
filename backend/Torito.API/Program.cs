@@ -73,17 +73,19 @@ if (app.Environment.IsDevelopment())
 // 本番環境(App Runnerなど)のリバースプロキシ配下ではHTTPSリダイレクトは不要な場合が多い
 // app.UseHttpsRedirection();
 
-// 登録したCORSポリシー("AllowReactApp")を有効にする
-// UseRoutingとUseEndpointsの間に配置するのが一般的だったが、.NET 6以降ではこの位置で問題ない
+// ルーティングミドルウェアを最初に配置
+app.UseRouting();
+
+// CORSミドルウェアを配置
 app.UseCors("AllowReactApp");
 
+// 認証ミドルウェアを配置
 app.UseAuthentication();
 
-// 認証ミドルウェア。今回はまだ使っていないが、将来的に[Authorize]属性などを機能させるために必要
+// 認可ミドルウェアを配置
 app.UseAuthorization();
 
-// リクエストを適切なControllerのアクションにマッピング（紐付け）する
-// .NET 6以降の推奨される方法
+// エンドポイントをマッピング
 app.MapControllers();
 
 // アプリケーションを実行
